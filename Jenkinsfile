@@ -2,11 +2,10 @@
 pipeline {
     agent any
 
-  environment {
-    IMAGE_NAME = 'smart-campus-platform'
-    PYTHON = 'C:\\Users\\acer\\AppData\\Local\\Programs\\Python\\Python313\\python.exe'
-    DOCKER_HOST = 'npipe:////./pipe/dockerDesktopLinuxEngine'
-}
+    environment {
+        IMAGE_NAME = 'smart-campus-platform'
+        PYTHON = 'C:\\Users\\acer\\AppData\\Local\\Programs\\Python\\Python313\\python.exe'
+        DOCKER_HOST = 'npipe:////./pipe/dockerDesktopLinuxEngine'
     }
 
     stages {
@@ -27,18 +26,18 @@ pipeline {
                 bat '"%PYTHON%" -m pytest -q'
             }
         }
+
         stage('Verify Docker') {
-    steps {
-        bat 'docker version'
-    }
-}
+            steps {
+                bat 'docker version'
+            }
+        }
 
         stage('Build Docker Image') {
             steps {
                 bat 'docker build -t %IMAGE_NAME%:%BUILD_NUMBER% .'
             }
         }
-
 
         stage('Deploy to Test Environment') {
             steps {
