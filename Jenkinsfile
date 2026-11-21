@@ -4,6 +4,7 @@ pipeline {
 
     environment {
         IMAGE_NAME = 'smart-campus-platform'
+        PYTHON = 'C:\\Users\\acer\\AppData\\Local\\Programs\\Python\\Python313\\python.exe'
     }
 
     stages {
@@ -15,13 +16,13 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                bat 'python -m pip install -r requirements.txt'
+                bat '"%PYTHON%" -m pip install -r requirements.txt'
             }
         }
 
         stage('Automated Tests') {
             steps {
-                bat 'python -m pytest -q'
+                bat '"%PYTHON%" -m pytest -q'
             }
         }
 
@@ -40,7 +41,7 @@ pipeline {
 
         stage('Smoke Test') {
             steps {
-                bat 'python -c "import urllib.request; r=urllib.request.urlopen(\'http://127.0.0.1:5001/health\', timeout=15); print(r.status); print(r.read().decode())"'
+                bat '"%PYTHON%" -c "import urllib.request; r=urllib.request.urlopen(\'http://127.0.0.1:5001/health\', timeout=15); print(r.status); print(r.read().decode())"'
             }
         }
     }
