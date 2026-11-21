@@ -70,3 +70,5 @@ constraints before real deployment.
 The default dates in tests are fixed examples and are not live schedules.
 
 Automatic Jenkins polling test
+
+Jenkins pipeline syntax verification
