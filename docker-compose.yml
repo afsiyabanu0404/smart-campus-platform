@@ -1,0 +1,11 @@
+services:
+  campus-platform:
+    build: .
+    container_name: smart-campus-platform
+    ports:
+      - "5000:5000"
+    volumes:
+      - campus_data:/app/instance
+    restart: unless-stopped
+volumes:
+  campus_data:

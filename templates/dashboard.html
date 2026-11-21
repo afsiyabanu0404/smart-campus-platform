@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Campus | Facility Management</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">SC</div>
+        <div><strong>SmartCampus</strong><small>FACILITY MANAGEMENT</small></div>
+      </div>
+      <div class="nav-label">WORKSPACE</div>
+      <a class="nav-link active" href="#overview" data-section="overview"><span>▦</span> Overview</a>
+      <a class="nav-link" href="#bookings" data-section="bookings"><span>▣</span> Room bookings</a>
+      <a class="nav-link" href="#tickets" data-section="tickets"><span>◷</span> Maintenance tickets</a>
+      <a class="nav-link" href="#sensors" data-section="sensors"><span>⌁</span> Sensor monitoring</a>
+      <a class="nav-link" href="#approvals" data-section="approvals"><span>✓</span> Approvals</a>
+      <div class="sidebar-bottom">
+        <div class="system-status"><i></i><span><b>System operational</b><small>API connection active</small></span></div>
+        <div class="user-card"><div class="avatar">AA</div><span><b>Campus Admin</b><small>Administrator</small></span></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div><div class="eyebrow">CAMPUS OPERATIONS / <span id="crumb">OVERVIEW</span></div><h1 id="page-title">Campus overview</h1></div>
+        <div class="top-actions"><span class="date-chip" id="today"></span><button class="primary-btn" onclick="showSection('bookings')">＋ New booking</button></div>
+      </header>
+
+      <section class="page-section active" id="overview">
+        <div class="welcome">
+          <div><span class="welcome-tag">CAMPUS OPERATIONS</span><h2>Good day, Campus Admin</h2><p>Here’s what’s happening across your campus facilities today.</p></div>
+          <div class="welcome-icon">🏫</div>
+        </div>
+        <div class="stat-grid">
+          <article class="stat-card"><div class="stat-top"><span>ROOM BOOKINGS</span><span class="stat-icon blue">▣</span></div><strong id="booking-count">—</strong><small>Recorded reservations</small></article>
+          <article class="stat-card"><div class="stat-top"><span>OPEN TICKETS</span><span class="stat-icon orange">◷</span></div><strong id="ticket-count">—</strong><small>Maintenance requests</small></article>
+          <article class="stat-card"><div class="stat-top"><span>SENSOR STATUS</span><span class="stat-icon purple">⌁</span></div><strong>Monitoring</strong><small>Threshold checks enabled</small></article>
+          <article class="stat-card"><div class="stat-top"><span>PLATFORM HEALTH</span><span class="stat-icon green">✓</span></div><strong class="healthy">Healthy</strong><small>Application API responding</small></article>
+        </div>
+        <div class="content-grid">
+          <article class="panel"><div class="panel-heading"><div><h3>Recent room bookings</h3><p>Latest reservations in the system</p></div><button class="text-btn" onclick="showSection('bookings')">View all →</button></div><div id="recent-bookings" class="table-wrap"><div class="empty">Loading bookings…</div></div></article>
+          <article class="panel quick-panel"><div class="panel-heading"><div><h3>Quick actions</h3><p>Common campus operations</p></div></div>
+            <button class="quick-action" onclick="showSection('bookings')"><span class="quick-icon blue">▣</span><span><b>Create a booking</b><small>Reserve a room or facility</small></span><span class="arrow">→</span></button>
+            <button class="quick-action" onclick="showSection('tickets')"><span class="quick-icon orange">◷</span><span><b>Raise maintenance ticket</b><small>Report a facility issue</small></span><span class="arrow">→</span></button>
+            <button class="quick-action" onclick="showSection('sensors')"><span class="quick-icon purple">⌁</span><span><b>Check sensor reading</b><small>Validate a sensor threshold</small></span><span class="arrow">→</span></button>
+          </article>
+        </div>
+      </section>
+
+      <section class="page-section" id="bookings">
+        <div class="section-intro"><div><h2>Room bookings</h2><p>Create reservations and prevent overlapping time slots.</p></div></div>
+        <div class="content-grid form-layout">
+          <article class="panel"><h3>Create a booking</h3><p class="panel-sub">Enter the room and reservation details.</p>
+            <form id="booking-form" class="form">
+              <label>Room / Facility<input name="room" placeholder="e.g. Seminar Hall A" required></label>
+              <label>Booked by<input name="user" placeholder="Student or faculty ID" required></label>
+              <div class="two-col"><label>Start time<input name="start" type="datetime-local" required></label><label>End time<input name="end" type="datetime-local" required></label></div>
+              <button class="primary-btn" type="submit">Create booking</button><div class="form-message" id="booking-message"></div>
+            </form>
+          </article>
+          <article class="panel"><div class="panel-heading"><div><h3>All reservations</h3><p>Saved booking records</p></div><button class="text-btn" onclick="loadBookings()">↻ Refresh</button></div><div id="booking-table" class="table-wrap"></div></article>
+        </div>
+      </section>
+
+      <section class="page-section" id="tickets">
+        <div class="section-intro"><div><h2>Maintenance tickets</h2><p>Track reported issues and their lifecycle.</p></div></div>
+        <div class="content-grid form-layout">
+          <article class="panel"><h3>Raise a maintenance ticket</h3><p class="panel-sub">A unique request key prevents duplicate submissions.</p>
+            <form id="ticket-form" class="form">
+              <label>Issue title<input name="title" placeholder="e.g. Projector not working" required></label>
+              <label>Request key<input name="request_key" placeholder="e.g. ISSUE-001" required></label>
+              <button class="primary-btn" type="submit">Create ticket</button><div class="form-message" id="ticket-message"></div>
+            </form>
+          </article>
+          <article class="panel"><div class="panel-heading"><div><h3>Ticket records</h3><p>Current maintenance requests</p></div></div><div id="ticket-table" class="table-wrap"></div></article>
+        </div>
+      </section>
+
+      <section class="page-section" id="sensors">
+        <div class="section-intro"><div><h2>Sensor monitoring</h2><p>Check readings against the configured alert threshold.</p></div></div>
+        <article class="panel narrow-panel"><div class="sensor-illustration">⌁</div><h3>Sensor threshold check</h3><p class="panel-sub">Demo threshold: 75 units. A reading at or above the threshold triggers an alert.</p>
+          <form id="sensor-form" class="form"><label>Sensor reading<input name="value" type="number" step="any" placeholder="Enter sensor value" required></label><button class="primary-btn" type="submit">Check reading</button><div id="sensor-message" class="form-message"></div></form>
+        </article>
+      </section>
+
+      <section class="page-section" id="approvals">
+        <div class="section-intro"><div><h2>Approval workflow</h2><p>Demonstrate role-based approval checks for restricted facilities.</p></div></div>
+        <article class="panel narrow-panel"><h3>Test an approval request</h3><p class="panel-sub">Try different roles to see how restricted approval is enforced.</p>
+          <form id="approval-form" class="form"><label>User role<select name="role"><option value="student">Student</option><option value="faculty">Faculty member</option><option value="facility_manager">Facility manager</option><option value="approver">Department approver</option><option value="admin">Administrator</option></select></label>
+          <label class="check-label"><input type="checkbox" name="restricted" checked> Restricted laboratory booking</label>
+          <button class="primary-btn" type="submit">Submit approval request</button><div id="approval-message" class="form-message"></div></form>
+        </article>
+      </section>
+      <footer>SmartCampus Facility Management <span>Educational demonstration project · Flask API</span></footer>
+    </main>
+  </div>
+  <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>
